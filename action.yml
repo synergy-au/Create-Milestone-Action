@@ -1,0 +1,20 @@
+
+name: 'Create Milestone'
+description: 'Automatically creates a milestone if applicable and assigns it to a pull request when it is review ready.'
+inputs:
+  secrets-token:
+    description: 'The Secrets Github Token used for authenticating Github API calls.'
+    required: true
+runs:
+  using: "composite"
+  steps:
+  - name: Run Create Milestone Script
+    id: run-create-milestone-script
+    run: ${{ github.action_path }}/create-milestone.sh
+    shell: bash
+    env:
+      SECRETS_TOKEN: ${{ inputs.secrets-token }}
+      REPOSITORY: ${{ github.repository }}
+      PULL_REQUEST_TITLE: ${{ github.event.pull_request.title }}
+      PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
+      PULL_REQUEST_MILESTONE: ${{ toJSON(github.event.pull_request.milestone) }}
